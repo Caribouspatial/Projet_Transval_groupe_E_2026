@@ -1,40 +1,37 @@
-import { DataTypes, Model } from 'sequelize';
-import sequelize from '../config/database.js';
+import { DataTypes, Model } from "sequelize";
+import sequelize from "../config/database.js";
 
-class Question extends Model {}
+class PendingQuestion extends Model {}
 
-Question.init(
+PendingQuestion.init(
 {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true
     },
-
     question: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false
     },
-
     choices: {
         type: DataTypes.JSON,
         allowNull: false
     },
-
     answer: {
         type: DataTypes.STRING,
         allowNull: false
     },
-
     categorie: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: true
     }
 },
 {
     sequelize,
-    tableName: 'questions',
+    tableName: "pending_questions",
     timestamps: true
 }
 );
 
-export default Question;
+export default PendingQuestion;

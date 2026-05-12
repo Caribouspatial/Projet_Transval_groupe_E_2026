@@ -1,6 +1,10 @@
-const API = "http://localhost:3000/api/questions";
+const API = "/api/questions";
 
-// 📥 POST question
+
+// =========================
+// ➕ AJOUT QUESTION (PENDING)
+// =========================
+
 document.getElementById("questionForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -12,52 +16,172 @@ document.getElementById("questionForm").addEventListener("submit", async (e) => 
         answer: f.answer.value
     };
 
-    await fetch(API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-    });
+    // 🔐 vérif front simple
+    if (!data.choices.includes(data.answer)) {
+        alert("La bonne réponse doit être dans les choix que vous proposez");
+        return;
+    }
 
-    f.reset();
-    loadQuestions();
+    try {
+        const res = await fetch(`${API}/pending`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
+
+        if (!res.ok) {
+            const err = await res.json();
+            alert(err.message || "Erreur serveur");
+            return;
+        }
+
+        f.reset();
+        loadPending();
+
+    } catch (err) {
+        console.error("POST ERROR:", err);
+    }
 });
 
-// 📤 GET questions
+
+// =========================
+// LOAD PENDING QUESTIONS
+// =========================
+
+async function loadPending() {
+    try {
+        const res = await fetch(`${API}/pending`);
+
+        if (!res.ok) {
+            console.error("Erreur API pending:", res.status);
+            return;
+        }
+
+        const data = await res.json();
+
+        const container = document.getElementById("pendingContainer");
+        container.innerHTML = "";
+
+        data.forEach(q => {
+            container.innerHTML += `
+                <div class="card p-3 mb-2 position-relative">
+
+                    <div class="position-absolute top-0 end-0 m-2">
+                        <button class="btn btn-success btn-sm" onclick="approve(${q.id})">✔</button>
+                        <button class="btn btn-danger btn-sm" onclick="reject(${q.id})">✖</button>
+                    </div>
+
+                    <b>${q.question}</b>
+
+                    <ul>
+                        ${Array.isArray(q.choices)
+                            ? q.choices.map(c => `<li>${c}</li>`).join("")
+                            : ""}
+                    </ul>
+
+                    <small>✔ Réponse: ${q.answer}</small>
+                </div>
+            `;
+        });
+
+    } catch (err) {
+        console.error("LOAD PENDING ERROR:", err);
+    }
+}
+
+
+// =========================
+// LOAD VALIDATED QUESTIONS
+// =========================
+
 async function loadQuestions() {
     try {
         const res = await fetch(API);
-        const data = await res.json();
 
-        console.log("API DATA:", data);
+        if (!res.ok) return;
+
+        const data = await res.json();
 
         const container = document.getElementById("questionsContainer");
         container.innerHTML = "";
 
-        // 🔥 sécurité anti crash 500
-        if (!Array.isArray(data)) {
-            console.error("API error:", data);
-            return;
-        }
-
         data.forEach(q => {
-            const div = document.createElement("div");
-
-            div.className = "card p-3 mb-2";
-
-            div.innerHTML = `
-                <h5>${q.question}</h5>
-                <ul>
-                    ${q.choices.map(c => `<li>${c}</li>`).join("")}
-                </ul>
-                <strong>✔ ${q.answer}</strong>
+            container.innerHTML += `
+                <div class="card p-2 mb-2">
+                    <b>${q.question}</b>
+                    <div><small>✔ ${q.answer}</small></div>
+                </div>
             `;
-
-            container.appendChild(div);
         });
 
     } catch (err) {
-        console.error("LOAD ERROR:", err);
+        console.error("LOAD QUESTIONS ERROR:", err);
     }
 }
 
+
+// =========================
+// ✔ APPROVE QUESTION
+// =========================
+
+async function approve(id) {
+    const password = prompt("Mot de passe admin");
+
+    try {
+        const res = await fetch(`${API}/approve/${id}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ password })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.message || "Erreur");
+            return;
+        }
+
+        loadPending();
+        loadQuestions();
+
+    } catch (err) {
+        console.error("APPROVE ERROR:", err);
+    }
+}
+
+
+// =========================
+// ✖ REJECT QUESTION
+// =========================
+
+async function reject(id) {
+    const password = prompt("Mot de passe admin");
+
+    try {
+        const res = await fetch(`${API}/reject/${id}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ password })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.message || "Erreur");
+            return;
+        }
+
+        loadPending();
+
+    } catch (err) {
+        console.error("REJECT ERROR:", err);
+    }
+}
+
+
+// =========================
+// INIT
+// =========================
+
+loadPending();
 loadQuestions();
