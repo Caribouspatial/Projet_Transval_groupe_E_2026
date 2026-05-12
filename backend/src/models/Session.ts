@@ -7,6 +7,14 @@ const Session = sequelize.define('Session', {
     allowNull: false,
     defaultValue: 'WAITING',
   },
+  current_question_id: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  },
+  question_index: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
 });
 
 export default Session;
