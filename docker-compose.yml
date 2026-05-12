@@ -25,11 +25,13 @@ services:
     ports:
       - "${BACKEND_PORT}:${BACKEND_PORT}"
     environment:
+      - NODE_ENV=development
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=${DB_HOST}
       - MQTT_URL=${MQTT_URL}
+    command: sh -c "npm install --include=dev && npm run dev"
     volumes:
       - ./backend:/app
       - /app/node_modules # Evite d'écraser les modules du container
@@ -43,6 +45,7 @@ services:
     ports:
       - "${FRONTEND_PORT}:${FRONTEND_PORT}"
     environment:
+      - NODE_ENV=development
       - FRONTEND_PORT=${FRONTEND_PORT}
     volumes:
       - ./frontend:/app
