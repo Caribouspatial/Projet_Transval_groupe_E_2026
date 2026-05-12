@@ -1,8 +1,12 @@
 FROM node:18-alpine
-WORKDIR /app
-ENV NODE_ENV=development
-ENV NPM_CONFIG_PRODUCTION=false
+WORKDIR /usr/src/app
 COPY package*.json ./
-RUN npm install --include=dev
+RUN npm install
 COPY . .
-CMD ["npm", "run", "dev"]
+# On compile le TypeScript en JavaScript
+RUN npm run build
+ENV PORT=3000 
+# Très important !
+EXPOSE 3000 
+# Très important !
+CMD ["npm", "start"]
