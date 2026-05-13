@@ -1,10 +1,20 @@
+import fs from 'fs';
 import mqtt from 'mqtt';
 import { env } from '../config/env';
 import { handleInput } from './game.service';
 
-const mqttUrl = env.MQTT_URL || 'mqtt://mosquitto:1883';
-const mqttTopic     = env.MQTT_TOPIC          || 'game/input';
-const mqttFeedback  = env.MQTT_FEEDBACK_TOPIC || 'game/feedback';
+const mqttUrl      = env.MQTT_URL             || 'mqtt://mosquitto:1883';
+const mqttTopic    = env.MQTT_TOPIC           || 'game/input';
+const mqttFeedback = env.MQTT_FEEDBACK_TOPIC  || 'game/feedback';
+
+const tlsOptions = mqttUrl.startsWith('mqtts') ? (() => {
+  try {
+    return { ca: fs.readFileSync('/app/certs/ca.crt'), rejectUnauthorized: false };
+  } catch {
+    console.warn('MQTT TLS: ca.crt not found, connecting without cert verification');
+    return { rejectUnauthorized: false };
+  }
+})() : {};
 
 let mqttClient: mqtt.MqttClient | null = null;
 
@@ -14,7 +24,7 @@ export const mqttPublish = (payload: object) => {
 };
 
 export const initMqtt = () => {
-  const client = mqtt.connect(mqttUrl);
+  const client = mqtt.connect(mqttUrl, tlsOptions);
   mqttClient = client;
 
   client.on('connect', () => {

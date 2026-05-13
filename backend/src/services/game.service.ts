@@ -108,6 +108,9 @@ export const setGameIo = (serverIo: Server) => {
 };
 
 export const startGame = async (quizId?: number | null) => {
+  await Participant.findOrCreate({ where: { buzzer_id: 1 }, defaults: { pseudo: 'Joueur 1', score: 0 } });
+  await Participant.findOrCreate({ where: { buzzer_id: 2 }, defaults: { pseudo: 'Joueur 2', score: 0 } });
+
   const session = (await getLatestSession()) || (await Session.create({}));
   const resolvedQuizId = quizId ?? (session.get('quiz_id') as number | null);
   const questionIds = await getOrderedQuestionIds(resolvedQuizId);
@@ -219,8 +222,15 @@ export const handleInput = async (buttonId: number) => {
 
     startCooldown(responderId);
 
+    if (!isCorrect) {
+      isLocked = false;
+      io?.emit('question_unlocked', {});
+    }
+
     try {
-      return await processAnswer(responderId, questionId, answer, isCorrect, responseTime);
+      const result = await processAnswer(responderId, questionId, answer, isCorrect, responseTime);
+      if (isCorrect) await nextGameQuestion();
+      return result;
     } catch (error) {
       console.error('processAnswer error:', error);
       io?.emit('server_error', { reason: 'Failed to process answer' });
