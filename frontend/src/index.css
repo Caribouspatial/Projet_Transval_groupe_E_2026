@@ -1,25 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 99%;
+    --foreground: 222 25% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 25% 12%;
+    --primary: 221 83% 53%;
+    --primary-foreground: 0 0% 100%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 221 83% 53%;
+    --radius: 0.5rem;
+  }
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
 body {
-  margin: 0;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: #f5f6f8;
-  color: #1c1c1c;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
-.app {
-  min-height: 100vh;
-  display: grid;
-  place-content: center;
-  text-align: center;
-  gap: 0.75rem;
-  padding: 2rem;
+@keyframes blob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(40px, -50px) scale(1.15); }
+  66%       { transform: translate(-30px, 30px) scale(0.9); }
 }
 
-h1 {
-  margin: 0;
-  font-size: 2.5rem;
+.animate-blob {
+  animation: blob 10s ease-in-out infinite;
 }
-
-p {
-  margin: 0;
-  font-size: 1rem;
-}
+.animation-delay-2000 { animation-delay: 2s; }
+.animation-delay-4000 { animation-delay: 4s; }
+.animation-delay-6000 { animation-delay: 6s; }
