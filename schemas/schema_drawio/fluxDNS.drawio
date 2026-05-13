@@ -59,7 +59,7 @@
             <mxPoint y="-10" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="s_p7uUI-oI-9liwTIMKu-20" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;exitX=0.615;exitY=0.16;exitDx=0;exitDy=0;exitPerimeter=0;strokeColor=light-dark(#000000,#0000FF);strokeWidth=5;startArrow=classic;startFill=1;" value="">
+        <mxCell id="s_p7uUI-oI-9liwTIMKu-20" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;exitX=0.615;exitY=0.16;exitDx=0;exitDy=0;exitPerimeter=0;strokeColor=light-dark(#000000,#0000FF);strokeWidth=5;startArrow=none;startFill=0;" value="">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="1652" y="380" />
