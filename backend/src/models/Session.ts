@@ -15,6 +15,10 @@ const Session = sequelize.define('Session', {
     type: DataTypes.INTEGER,
     defaultValue: 0,
   },
+  quiz_id: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  },
 });
 
 export default Session;

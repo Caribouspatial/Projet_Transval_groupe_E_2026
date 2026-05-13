@@ -12,7 +12,15 @@ export const authRequired = (req: Request, res: Response, next: NextFunction) =>
   try {
     (req as { user?: unknown }).user = jwt.verify(token, jwtSecret);
     return next();
-  } catch (error) {
+  } catch {
     return res.status(401).json({ error: 'Invalid token' });
   }
+};
+
+export const adminRequired = (req: Request, res: Response, next: NextFunction) => {
+  const user = (req as { user?: { role?: string } }).user;
+  if (!user || user.role !== 'admin') {
+    return res.status(403).json({ error: 'Admin access required' });
+  }
+  return next();
 };
