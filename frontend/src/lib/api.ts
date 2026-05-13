@@ -11,6 +11,10 @@ export const apiFetch = async (path: string, options: RequestInit = {}) => {
     },
   });
   const data = await res.json();
+  if (res.status === 401) {
+    localStorage.removeItem('token');
+    window.location.href = '/login';
+  }
   if (!res.ok) throw new Error(data.error || 'Erreur');
   return data;
 };

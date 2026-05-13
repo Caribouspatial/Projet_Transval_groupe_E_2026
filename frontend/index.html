@@ -1,27 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <title>EduQuiz</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-  <h1>EduQuiz</h1>
-
-  <h2 id="question">Chargement...</h2>
-
-  <div id="reponses"></div>
-
-  <div class="buzzers">
-  <button id="buzzer1" onclick="buzzer(1)">BUZZ J1</button>
-  <button id="buzzer2" onclick="buzzer(2)">BUZZ J2</button>
-</div>
-
-  <p id="status"></p>
-  <p id="buzz"></p>
-  <p id="resultat"></p>
-
-  <script src="script.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IoT Quiz</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
