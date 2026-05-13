@@ -6,7 +6,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 
-const API = 'http://localhost:3000/api';
+const API = import.meta.env.VITE_API_URL ?? '/api';
 
 interface Props {
   onSuccess: (token: string) => void;
