@@ -18,6 +18,10 @@ const Question = sequelize.define('Question', {
     type: DataTypes.INTEGER,
     defaultValue: 10,
   },
+  quiz_id: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  },
 });
 
 export default Question;

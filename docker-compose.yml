@@ -30,7 +30,12 @@ services:
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=${DB_HOST}
+      - BACKEND_PORT=${BACKEND_PORT}
+      - JWT_SECRET=${JWT_SECRET}
+      - ADMIN_USERNAME=${ADMIN_USERNAME}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
       - MQTT_URL=${MQTT_URL}
+      - MQTT_TOPIC=${MQTT_TOPIC}
     command: sh -c "npm install --include=dev && npm run dev"
     volumes:
       - ./backend:/app
@@ -47,6 +52,7 @@ services:
     environment:
       - NODE_ENV=development
       - FRONTEND_PORT=${FRONTEND_PORT}
+    command: sh -c "npm install && npm run dev"
     volumes:
       - ./frontend:/app
       - /app/node_modules
